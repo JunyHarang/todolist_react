@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
 import axios from 'axios';
+import Input from "./components/input"
+import Todo from './components/todo';
 
 function App() {
 
@@ -90,33 +92,17 @@ function App() {
   return ( // 화면이 실제 보이는 부분
     <div className="App">
       <h1>TODO List</h1>
-      {/*onSubmit은 form을 제출했을 때 무엇을 할 것인가?를 결정 */}
-      <form onSubmit={insertTodo}>
-        <label>
-          Todo &nbsp;
-          <input type="text" required={true} value={input} onChange={inputText} />
-        </label>
-        <input type="submit" value="Create" />
-      </form>
+      <Input handleSumit={insertTodo} input={input} handleInput={inputText} />
 
       {/* 리엑트 반복문 */}
       {/* 삼항 연산자로 tods에 값이 있으면 map()을 통해 todo를 전달하여 todo안에 todoName을 반환한다. */}
       {
         todos ? todos.map((todo) => {
           return (
-            <div className="todo" key={todo.id}>
-
-              <h3>
-
-                <label className={todo.completed ? "completed" : null} 
-                  onClick={() => updateTodo(todo.id)}>
-                    {todo.id}. &nbsp;
-                    {todo.todoName}
-                </label>
-                <label onClick={() => deleteTodo(todo.id)}>&nbsp;&nbsp;&nbsp;❌</label>
-              </h3>
-              
-            </div>
+            <Todo key={todo.id} todo={todo} handleUpdate={() => 
+              updateTodo(todo.id)} 
+              handleDelte={() => 
+                deleteTodo(todo.id)}/>
           )
         }) : null
       }
