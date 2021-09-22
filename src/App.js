@@ -47,6 +47,38 @@ function App() {
     alert("할일이 정상적으로 추가 되었습니다!");
   }
 
+  function updateTodo(id) {
+    const updateTodo = async () => {
+      await axios.put(baseurl + "/todo/" + id, {})
+                 .then((response) =>{
+                   setTodos(todos.map((todo) => 
+                    todo.id === id ? { ...todo, completed: !todo.completed} : todo
+                   )
+                  )
+                   //화면에서만 바꿔주게 한다. DB까지 접근하지 않는다.
+                 })
+                 .catch((error) => {
+                   console.error(error);
+                 })
+    }
+    updateTodo();
+  }
+
+  function deleteTodo(id) {
+    const deleteTodo = async () => {
+      await axios.delete(baseurl + "/todo/" + id, {})
+                 .then((response) =>{
+                   setTodos(
+                     todos.filter((todo) => todo.id !== id) 
+                   )  
+                 })
+                 .catch((error) => {
+                   console.error(error);
+                 })
+    }
+    deleteTodo();
+  }
+
   function inputText(e) {
     // 새로 고침을 막는 부분
     e.preventDefault();
@@ -73,11 +105,15 @@ function App() {
         todos ? todos.map((todo) => {
           return (
             <div className="todo" key={todo.id}>
+
               <h3>
-                <label onClick={null}>
-                  {todo.id}. &nbsp;
-                  {todo.todoName}
+
+                <label className={todo.completed ? "completed" : null} 
+                  onClick={() => updateTodo(todo.id)}>
+                    {todo.id}. &nbsp;
+                    {todo.todoName}
                 </label>
+                <label onClick={() => deleteTodo(todo.id)}>&nbsp;&nbsp;&nbsp;❌</label>
               </h3>
               
             </div>
